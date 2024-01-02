@@ -18,6 +18,7 @@ import { useMonaco, useContainer } from '../hooks'
 import { getOrCreateModel, isUndefined, defaultSlotHelper } from '../utils'
 
 export interface EditorProps {
+  shouldDisposeModels?: boolean
   defaultValue?: string
   defaultPath?: string
   defaultLanguage?: string
@@ -64,6 +65,7 @@ export default defineComponent({
     event: 'update:value',
   },
   props: {
+    shouldDisposeModels: Boolean,
     defaultValue: String,
     defaultPath: String,
     defaultLanguage: String,
@@ -116,7 +118,9 @@ export default defineComponent({
     onUnmounted(() => {
       disposeValidator.value?.()
       if (editorRef.value) {
-        editorRef.value.getModel()?.dispose()
+        if (props.shouldDisposeModels) {
+          editorRef.value.getModel()?.dispose()
+        }
         editorRef.value.dispose()
       } else {
         unload()

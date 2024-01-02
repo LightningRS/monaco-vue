@@ -24,6 +24,7 @@ export interface DiffEditorProps {
   modifiedLanguage?: string
   originalModelPath?: string
   modifiedModelPath?: string
+  shouldDisposeModels?: boolean
 
   /* === */
 
@@ -60,6 +61,7 @@ export default defineComponent({
     modifiedLanguage: String,
     originalModelPath: String,
     modifiedModelPath: String,
+    shouldDisposeModels: Boolean,
 
     /* == */
 
@@ -94,10 +96,11 @@ export default defineComponent({
     onUnmounted(() => {
       !monacoRef.value && unload()
 
-      const models = diffEditorRef.value?.getModel?.()
-      models?.original?.dispose?.()
-      models?.modified?.dispose?.()
-
+      if (props.shouldDisposeModels) {
+        const models = diffEditorRef.value?.getModel?.()
+        models?.original?.dispose?.()
+        models?.modified?.dispose?.()
+      }
       diffEditorRef.value?.dispose?.()
     })
 
